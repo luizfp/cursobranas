@@ -1,28 +1,28 @@
 package br.com.luizfp.cursobranas.infra.api;
 
-import br.com.luizfp.cursobranas.application.dto.GetOrderOutput;
-import br.com.luizfp.cursobranas.application.usecase.GetOrder;
-import br.com.luizfp.cursobranas.application.usecase.GetOrdersList;
-import br.com.luizfp.cursobranas.domain.repository.OrderRepository;
+import br.com.luizfp.cursobranas.application.query.GetOrder;
+import br.com.luizfp.cursobranas.application.query.GetOrderOutput;
+import br.com.luizfp.cursobranas.application.query.GetOrdersList;
+import br.com.luizfp.cursobranas.application.query.OrderDao;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public final class OrderService {
     @NotNull
-    private final OrderRepository orderRepository;
+    private final OrderDao orderDao;
 
-    public OrderService(@NotNull final OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
+    public OrderService(@NotNull final OrderDao orderDao) {
+        this.orderDao = orderDao;
     }
 
     @NotNull
     public List<GetOrderOutput> getOrders() {
-        return new GetOrdersList(orderRepository).execute();
+        return new GetOrdersList(orderDao).execute();
     }
 
     @NotNull
     public GetOrderOutput getOrderById(@NotNull final Long orderId) {
-        return new GetOrder(orderRepository).execute(orderId);
+        return new GetOrder(orderDao).execute(orderId);
     }
 }

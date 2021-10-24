@@ -17,16 +17,4 @@ public final class OrderRepositoryMemory implements OrderRepository {
         orders.add(order);
         return 1L;
     }
-
-    @NotNull
-    @Override
-    public Order getById(@NotNull final Long orderId) {
-        return orders.get(0);
-    }
-
-    @NotNull
-    @Override
-    public List<Order> getOrders() {
-        return orders;
-    }
 }

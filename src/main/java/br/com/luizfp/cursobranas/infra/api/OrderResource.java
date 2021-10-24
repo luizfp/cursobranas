@@ -1,8 +1,8 @@
 package br.com.luizfp.cursobranas.infra.api;
 
-import br.com.luizfp.cursobranas.application.dto.GetOrderOutput;
+import br.com.luizfp.cursobranas.application.query.GetOrderOutput;
+import br.com.luizfp.cursobranas.infra.dao.OrderDaoDatabase;
 import br.com.luizfp.cursobranas.infra.database.DatabaseConnectionAdapter;
-import br.com.luizfp.cursobranas.infra.repository.database.OrderRepositoryDatabase;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +17,7 @@ import java.util.List;
 public final class OrderResource {
     @NotNull
     private final OrderService orderService =
-            new OrderService(new OrderRepositoryDatabase(new DatabaseConnectionAdapter()));
+            new OrderService(new OrderDaoDatabase(new DatabaseConnectionAdapter()));
 
     @GetMapping
     public ResponseEntity<List<GetOrderOutput>> getOrders() {

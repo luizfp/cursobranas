@@ -1,6 +1,6 @@
 package br.com.luizfp.cursobranas.integration;
 
-import br.com.luizfp.cursobranas.application.dto.GetOrderOutput;
+import br.com.luizfp.cursobranas.application.query.GetOrderOutput;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

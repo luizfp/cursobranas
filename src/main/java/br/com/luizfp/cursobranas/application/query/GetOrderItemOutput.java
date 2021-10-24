@@ -1,4 +1,4 @@
-package br.com.luizfp.cursobranas.application.dto;
+package br.com.luizfp.cursobranas.application.query;
 
 import org.jetbrains.annotations.NotNull;
 
