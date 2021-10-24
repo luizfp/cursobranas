@@ -26,11 +26,11 @@ public final class OrderRepositoryDatabase implements OrderRepository {
                 .runInTransaction(tx -> {
                     final DatabaseResultRow db = tx.saveReturning("""
                                                                           insert into orders (
-                                                                          user_cpf, 
-                                                                          used_coupon_id, 
-                                                                          created_at, 
-                                                                          order_total, 
-                                                                          shipping_cost) 
+                                                                          user_cpf,
+                                                                          used_coupon_id,
+                                                                          created_at,
+                                                                          order_total,
+                                                                          shipping_cost)
                                                                           values (?, ?, ?, ?, ?) returning id;
                                                                           """,
                                                                   order.getCpf(),
@@ -42,24 +42,12 @@ public final class OrderRepositoryDatabase implements OrderRepository {
                     for (final OrderItem item : order.getOrderItems()) {
                         tx.save("""
                                         insert into order_item (order_id,
-                                                                category,
-                                                                description,
                                                                 price,
-                                                                height_cm,
-                                                                width_cm,
-                                                                length_cm,
-                                                                weight_kg,
                                                                 quantity)
-                                        values (?, ?, ?, ?, ?, ?, ?, ?, ?);
+                                        values (?, ?, ?);
                                         """,
                                 orderId,
-                                item.category(),
-                                item.description(),
                                 item.price(),
-                                item.heightCm(),
-                                item.widthCm(),
-                                item.lengthCm(),
-                                item.weightKg(),
                                 item.quantity());
                     }
                     return orderId;
