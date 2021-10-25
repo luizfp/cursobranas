@@ -36,12 +36,14 @@ create table orders
 
 create table order_item
 (
-    id          bigserial        not null
+    id       bigserial     not null
         constraint pk_order_item primary key,
-    order_id    bigint           not null
+    order_id bigint        not null
         constraint fk_order references orders (id),
-    price       numeric(5, 2)    not null,
-    quantity    integer          not null
+    item_id  bigint        not null
+        constraint fk_item references stock_item (id),
+    price    numeric(5, 2) not null,
+    quantity integer       not null
 );
 
 insert into stock_item (category, description, price, height_cm, width_cm, length_cm, weight_kg)
@@ -50,7 +52,7 @@ values ('Electronics', 'Mouse', 50, 2, 3, 5, 0.3),
        ('Electronics', 'Smartphone', 800, 2, 3, 5, 0.3);
 
 -- Drops.
--- drop table stock_item;
 -- drop table order_item;
+-- drop table stock_item;
 -- drop table orders;
 -- drop table coupon;

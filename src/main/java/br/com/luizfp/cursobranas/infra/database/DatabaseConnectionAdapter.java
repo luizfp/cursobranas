@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Collection;
 
 public final class DatabaseConnectionAdapter implements DatabaseConnection {
     private static final String DRIVER = "org.postgresql.Driver";
@@ -35,7 +36,21 @@ public final class DatabaseConnectionAdapter implements DatabaseConnection {
     @Override
     public <T> T query(@NotNull final String query,
                        @Nullable final Object... parameters) {
-        return internal.internalQuery(createConnection(), query, parameters);
+        return internal.internalQuery(createConnection(), query, QueryType.ANY, parameters);
+    }
+
+    @NotNull
+    @Override
+    public <T> T one(@NotNull final String query,
+                     @Nullable final Object... parameters) {
+        return internal.internalQuery(createConnection(), query, QueryType.ONE, parameters);
+    }
+
+    @NotNull
+    @Override
+    public <T extends Collection<?>> T many(@NotNull final String query,
+                                            @Nullable final Object... parameters) {
+        return internal.internalQuery(createConnection(), query, QueryType.MANY, parameters);
     }
 
     @Override

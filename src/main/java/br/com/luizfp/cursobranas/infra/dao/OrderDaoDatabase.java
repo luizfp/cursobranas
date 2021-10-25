@@ -53,8 +53,11 @@ public final class OrderDaoDatabase implements OrderDao {
     @NotNull
     private List<GetOrderItemOutput> createOrderItems(@NotNull final DatabaseConnection tx,
                                                       @NotNull final Long orderId) {
-        final List<DatabaseResultRow> dbItems =
-                tx.query("select * from order_item oi where oi.order_id = ?", orderId);
+        final List<DatabaseResultRow> dbItems = tx.query("""
+                                                                 select * from order_item oi
+                                                                 join stock_item si on oi.id_item = si.id
+                                                                 where oi.order_id = ?
+                                                                 """, orderId);
         final List<GetOrderItemOutput> items = new ArrayList<>();
         dbItems.forEach(dbItem -> items.add(new GetOrderItemOutput(dbItem.get("id"),
                                                                    dbItem.get("category"),

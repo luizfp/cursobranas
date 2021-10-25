@@ -38,11 +38,13 @@ public final class OrderRepositoryDatabase implements OrderRepository {
                     for (final OrderItem item : order.getOrderItems()) {
                         tx.save("""
                                         insert into order_item (order_id,
+                                                                item_id,
                                                                 price,
                                                                 quantity)
                                         values (?, ?, ?);
                                         """,
                                 orderId,
+                                item.id(),
                                 item.price(),
                                 item.quantity());
                     }

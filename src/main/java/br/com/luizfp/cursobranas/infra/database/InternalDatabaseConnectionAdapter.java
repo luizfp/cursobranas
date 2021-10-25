@@ -7,12 +7,15 @@ import java.sql.*;
 import java.time.OffsetDateTime;
 import java.util.*;
 
+import static br.com.luizfp.cursobranas.infra.database.QueryType.*;
+
 public final class InternalDatabaseConnectionAdapter {
 
     @SuppressWarnings("unchecked")
     @NotNull
     public <T> T internalQuery(@NotNull final Connection connection,
                                @NotNull final String query,
+                               @NotNull final QueryType queryType,
                                @Nullable final Object... parameters) {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
@@ -24,9 +27,15 @@ public final class InternalDatabaseConnectionAdapter {
                 do {
                     lines.add(createDatabaseLineItem(resultSet));
                 } while (resultSet.next());
+                if (queryType == ONE && lines.size() > 1) {
+                    throw new IllegalStateException("More than one row returned for one(...) query!");
+                }
                 return lines.size() == 1 ? (T) lines.get(0) : (T) lines;
             } else {
-                return (T) Collections.emptyList();
+                if (queryType == ONE || queryType == MANY) {
+                    throw new IllegalStateException("%s query returned no results!".formatted(queryType));
+                }
+                return null;
             }
         } catch (final SQLException e) {
             throw new RuntimeException(e);
