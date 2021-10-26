@@ -41,7 +41,7 @@ public final class OrderRepositoryDatabase implements OrderRepository {
                                                                 item_id,
                                                                 price,
                                                                 quantity)
-                                        values (?, ?, ?);
+                                        values (?, ?, ?, ?);
                                         """,
                                 orderId,
                                 item.id(),
