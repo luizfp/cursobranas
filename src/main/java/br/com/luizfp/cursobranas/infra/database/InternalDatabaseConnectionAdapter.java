@@ -7,8 +7,6 @@ import java.sql.*;
 import java.time.OffsetDateTime;
 import java.util.*;
 
-import static br.com.luizfp.cursobranas.infra.database.QueryType.*;
-
 public final class InternalDatabaseConnectionAdapter {
 
     @SuppressWarnings("unchecked")
@@ -21,21 +19,29 @@ public final class InternalDatabaseConnectionAdapter {
         ResultSet resultSet = null;
         try {
             statement = createStatement(connection, query, parameters);
-            resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                final List<DatabaseResultRow> lines = new ArrayList<>();
-                do {
-                    lines.add(createDatabaseLineItem(resultSet));
-                } while (resultSet.next());
-                if (queryType == ONE && lines.size() > 1) {
-                    throw new IllegalStateException("More than one row returned for one(...) query!");
-                }
-                return lines.size() == 1 ? (T) lines.get(0) : (T) lines;
+            if (queryType.noResults()) {
+                statement.execute();
+                return (T) Void.TYPE;
             } else {
-                if (queryType == ONE || queryType == MANY) {
-                    throw new IllegalStateException("%s query returned no results!".formatted(queryType));
+                resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    final List<DatabaseResultRow> lines = new ArrayList<>();
+                    do {
+                        lines.add(createDatabaseLineItem(resultSet));
+                    } while (resultSet.next());
+                    if (queryType.onlyOne() && lines.size() > 1) {
+                        throw new IllegalStateException("More than one row returned for %s query!".formatted(queryType));
+                    }
+                    if (lines.size() == 1) {
+                        return queryType == QueryType.ONE ? (T) lines.get(0) : (T) Optional.of(lines.get(0));
+                    }
+                    return (T) lines;
+                } else {
+                    if (queryType.requiresSomeResult()) {
+                        throw new IllegalStateException("%s query returned no results!".formatted(queryType));
+                    }
+                    return (T) Optional.empty();
                 }
-                return null;
             }
         } catch (final SQLException e) {
             throw new RuntimeException(e);

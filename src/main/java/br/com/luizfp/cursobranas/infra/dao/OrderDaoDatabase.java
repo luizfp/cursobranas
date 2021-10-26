@@ -23,7 +23,7 @@ public final class OrderDaoDatabase implements OrderDao {
     public GetOrderOutput getOrder(@NotNull final Long orderId) {
         return databaseConnection
                 .runInTransaction(tx -> {
-                    final DatabaseResultRow dbOrder = tx.query("select * from orders o where o.id = ?", orderId);
+                    final DatabaseResultRow dbOrder = tx.one("select * from orders o where o.id = ?", orderId);
                     final var items = createOrderItems(tx, orderId);
                     return new GetOrderOutput(orderId,
                                               dbOrder.get("code"),
@@ -36,7 +36,7 @@ public final class OrderDaoDatabase implements OrderDao {
     public List<GetOrderOutput> getOrders() {
         return databaseConnection
                 .runInTransaction(tx -> {
-                    final List<DatabaseResultRow> dbOrders = tx.query("select * from orders");
+                    final List<DatabaseResultRow> dbOrders = tx.many("select * from orders");
                     final List<GetOrderOutput> orders = new ArrayList<>();
                     for (final DatabaseResultRow dbOrder : dbOrders) {
                         final Long orderId = dbOrder.get("id");
@@ -53,7 +53,7 @@ public final class OrderDaoDatabase implements OrderDao {
     @NotNull
     private List<GetOrderItemOutput> createOrderItems(@NotNull final DatabaseConnection tx,
                                                       @NotNull final Long orderId) {
-        final List<DatabaseResultRow> dbItems = tx.query("""
+        final List<DatabaseResultRow> dbItems = tx.many("""
                                                                  select * from order_item oi
                                                                  join stock_item si on oi.item_id = si.id
                                                                  where oi.order_id = ?

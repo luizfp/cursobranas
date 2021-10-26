@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Optional;
 
 public final class DatabaseConnectionAdapter implements DatabaseConnection {
     private static final String DRIVER = "org.postgresql.Driver";
@@ -34,13 +35,6 @@ public final class DatabaseConnectionAdapter implements DatabaseConnection {
 
     @NotNull
     @Override
-    public <T> T query(@NotNull final String query,
-                       @Nullable final Object... parameters) {
-        return internal.internalQuery(createConnection(), query, QueryType.ANY, parameters);
-    }
-
-    @NotNull
-    @Override
     public <T> T one(@NotNull final String query,
                      @Nullable final Object... parameters) {
         return internal.internalQuery(createConnection(), query, QueryType.ONE, parameters);
@@ -51,6 +45,19 @@ public final class DatabaseConnectionAdapter implements DatabaseConnection {
     public <T extends Collection<?>> T many(@NotNull final String query,
                                             @Nullable final Object... parameters) {
         return internal.internalQuery(createConnection(), query, QueryType.MANY, parameters);
+    }
+
+    @NotNull
+    @Override
+    public <T extends Optional<?>> T maybeOne(@NotNull final String query,
+                                              @Nullable final Object... parameters) {
+        return internal.internalQuery(createConnection(), query, QueryType.MAYBE_ONE, parameters);
+    }
+
+    @Override
+    public void none(@NotNull final String query,
+                     @Nullable final Object... parameters) {
+        internal.internalQuery(createConnection(), query, QueryType.NONE, parameters);
     }
 
     @Override

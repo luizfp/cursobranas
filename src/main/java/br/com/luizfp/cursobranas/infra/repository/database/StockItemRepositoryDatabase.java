@@ -17,7 +17,7 @@ public final class StockItemRepositoryDatabase implements StockItemRepository {
     @NotNull
     @Override
     public StockItem getById(@NotNull final Long itemId) {
-        final DatabaseResultRow row = databaseConnection.query("select * from stock_item where id = ?", itemId);
+        final DatabaseResultRow row = databaseConnection.one("select * from stock_item where id = ?", itemId);
         return new StockItem(
                 row.get("id"),
                 row.get("category"),

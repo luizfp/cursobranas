@@ -6,7 +6,6 @@ import br.com.luizfp.cursobranas.infra.database.DatabaseConnectionAdapter;
 import br.com.luizfp.cursobranas.infra.database.DatabaseResultRow;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Optional;
 
 public final class CouponRepositoryDatabase implements CouponRepository {
@@ -20,12 +19,8 @@ public final class CouponRepositoryDatabase implements CouponRepository {
     @NotNull
     @Override
     public Optional<Coupon> getByCode(@NotNull final String couponCode) {
-        final List<DatabaseResultRow> items =
-                databaseConnection.query("select * from coupon c where c.code = ?", couponCode);
-        final Optional<DatabaseResultRow> optional = items
-                .stream()
-                .filter(db -> db.get("code").equals(couponCode))
-                .findFirst();
+        final Optional<DatabaseResultRow> optional =
+                databaseConnection.maybeOne("select * from coupon c where c.code = ?", couponCode);
         if (optional.isPresent()) {
             final DatabaseResultRow db = optional.get();
             return Optional.of(new Coupon(db.get("id"),

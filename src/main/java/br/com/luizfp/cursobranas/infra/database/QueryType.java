@@ -1,7 +1,20 @@
 package br.com.luizfp.cursobranas.infra.database;
 
 public enum QueryType {
-    ANY,
     ONE,
-    MANY
+    MAYBE_ONE,
+    MANY,
+    NONE;
+
+    public boolean onlyOne() {
+        return this == ONE || this == MAYBE_ONE;
+    }
+
+    public boolean requiresSomeResult() {
+        return this == ONE || this == MANY;
+    }
+
+    public boolean noResults() {
+        return this == NONE;
+    }
 }

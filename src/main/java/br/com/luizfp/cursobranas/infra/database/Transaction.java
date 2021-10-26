@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Optional;
 
 public final class Transaction implements DatabaseConnection, AutoCloseable {
     @NotNull
@@ -29,13 +30,6 @@ public final class Transaction implements DatabaseConnection, AutoCloseable {
 
     @NotNull
     @Override
-    public <T> T query(@NotNull final String query,
-                       @Nullable final Object... parameters) {
-        return internal.internalQuery(connection, query, QueryType.ANY, parameters);
-    }
-
-    @NotNull
-    @Override
     public <T> T one(@NotNull final String query,
                      @Nullable final Object... parameters) {
         return internal.internalQuery(connection, query, QueryType.ONE, parameters);
@@ -46,6 +40,19 @@ public final class Transaction implements DatabaseConnection, AutoCloseable {
     public <T extends Collection<?>> T many(@NotNull final String query,
                                             @Nullable final Object... parameters) {
         return internal.internalQuery(connection, query, QueryType.MANY, parameters);
+    }
+
+    @NotNull
+    @Override
+    public <T extends Optional<?>> T maybeOne(@NotNull final String query,
+                                              @Nullable final Object... parameters) {
+        return internal.internalQuery(connection, query, QueryType.MAYBE_ONE, parameters);
+    }
+
+    @Override
+    public void none(@NotNull final String query,
+                     @Nullable final Object... parameters) {
+        internal.internalQuery(connection, query, QueryType.NONE, parameters);
     }
 
     @Override

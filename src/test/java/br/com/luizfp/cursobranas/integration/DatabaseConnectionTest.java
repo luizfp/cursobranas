@@ -12,7 +12,7 @@ public class DatabaseConnectionTest {
     @Test
     void shouldCreateDatabaseConnection() {
         final DatabaseConnection databaseConnection = new DatabaseConnectionAdapter();
-        final DatabaseResultRow result = databaseConnection.query("select 1");
+        final DatabaseResultRow result = databaseConnection.one("select 1");
         assertThat(result).isNotNull();
     }
 }
