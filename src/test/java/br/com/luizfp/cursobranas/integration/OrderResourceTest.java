@@ -1,6 +1,16 @@
 package br.com.luizfp.cursobranas.integration;
 
+import br.com.luizfp.cursobranas.application.dto.PlaceOrderInput;
+import br.com.luizfp.cursobranas.application.dto.PlaceOrderItemInput;
+import br.com.luizfp.cursobranas.application.dto.PlaceOrderOutput;
 import br.com.luizfp.cursobranas.application.query.GetOrderOutput;
+import br.com.luizfp.cursobranas.application.usecase.PlaceOrder;
+import br.com.luizfp.cursobranas.application.usecase.ValidateCoupon;
+import br.com.luizfp.cursobranas.infra.database.DatabaseConnectionAdapter;
+import br.com.luizfp.cursobranas.infra.repository.database.CouponRepositoryDatabase;
+import br.com.luizfp.cursobranas.infra.repository.database.OrderRepositoryDatabase;
+import br.com.luizfp.cursobranas.infra.repository.database.StockItemRepositoryDatabase;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +21,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -20,6 +31,15 @@ import static com.google.common.truth.Truth.assertThat;
 public class OrderResourceTest {
     @Autowired
     private TestRestTemplate restTemplate;
+    private static PlaceOrder placeOrder;
+
+    @BeforeAll
+    static void beforeAll() {
+        final var databaseConnection = new DatabaseConnectionAdapter();
+        placeOrder = new PlaceOrder(new ValidateCoupon(new CouponRepositoryDatabase(databaseConnection)),
+                                    new OrderRepositoryDatabase(databaseConnection),
+                                    new StockItemRepositoryDatabase(databaseConnection));
+    }
 
     @Test
     void shouldListOrdersFromApiEndpoint() {
@@ -33,8 +53,14 @@ public class OrderResourceTest {
 
     @Test
     void shouldGetOrderByIdFromApiEndpoint() {
+        final PlaceOrderInput input = new PlaceOrderInput(
+                "584.876.259-75",
+                List.of(new PlaceOrderItemInput(1, 5),
+                        new PlaceOrderItemInput(2, 2),
+                        new PlaceOrderItemInput(3, 1)));
+        final PlaceOrderOutput output = placeOrder.execute(input, OffsetDateTime.now());
         final ResponseEntity<GetOrderOutput> responseEntity = restTemplate.getForEntity(
-                "/v1/orders/1",
+                "/v1/orders/%d".formatted(output.orderId()),
                 GetOrderOutput.class);
         assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
     }
