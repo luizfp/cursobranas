@@ -52,7 +52,8 @@ create table order_item
 insert into stock_item (category, description, price, quantity_available, height_cm, width_cm, length_cm, weight_kg)
 values ('Electronics', 'Mouse', 50, 10, 2, 3, 5, 0.3),
        ('Electronics', 'Keyboard', 200, 10, 2, 30, 10, 0.5),
-       ('Electronics', 'Smartphone', 800, 10, 2, 3, 5, 0.3);
+       ('Electronics', 'Smartphone', 800, 10, 2, 3, 5, 0.3),
+       ('Electronics', 'Smartwatch', 800, 0, 2, 3, 3, 0.150);
 
 -- Drops.
 -- drop table order_item;
