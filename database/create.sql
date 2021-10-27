@@ -7,7 +7,7 @@ create table stock_item
     category           text             not null,
     description        text             not null,
     price              numeric(5, 2)    not null,
-    quantity_available integer          not null,
+    quantity_available integer          not null check ( quantity_available >= 0 ),
     height_cm          double precision not null,
     width_cm           double precision not null,
     length_cm          double precision not null,
