@@ -69,7 +69,7 @@ public class PlaceOrderTest {
                 "584.876.259-75", List.of(new PlaceOrderItemInput(1, 5)));
         final ValidateCoupon validateCoupon = new ValidateCoupon(couponRepository);
         final OrderRepository orderRepository = Mockito.mock(OrderRepository.class);
-        Mockito.when(orderRepository.save(Mockito.any())).thenReturn(42L);
+        Mockito.when(orderRepository.nextSequence()).thenReturn(42L);
         final StockItemRepositoryDatabase stockItemRepository = new StockItemRepositoryDatabase(new DatabaseConnectionAdapter());
         final PlaceOrder placeOrder = new PlaceOrder(validateCoupon, orderRepository, stockItemRepository);
         final OffsetDateTime orderCreatedAt = OffsetDateTime.parse("2021-01-01T10:00:00+00:00");

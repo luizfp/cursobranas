@@ -1,6 +1,6 @@
 package br.com.luizfp.cursobranas.domain.entity;
 
-import br.com.luizfp.cursobranas.application.dto.OrderCode;
+import br.com.luizfp.cursobranas.domain.service.ShippingCalculator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,11 +22,12 @@ public class Order {
     private Coupon coupon;
 
     public Order(@NotNull final String cpf,
-                 @NotNull final OffsetDateTime orderCreatedAt) {
+                 @NotNull final OffsetDateTime orderCreatedAt,
+                 final long sequence) {
         this.cpf = new Cpf(cpf);
         this.createdAt = orderCreatedAt;
         this.items = new ArrayList<>();
-        this.orderCode = new OrderCode(orderCreatedAt);
+        this.orderCode = new OrderCode(orderCreatedAt, sequence);
     }
 
     @NotNull
@@ -50,8 +51,8 @@ public class Order {
     }
 
     @NotNull
-    public String generateOrderCode(@NotNull final Long orderId) {
-        return orderCode.getValue(orderId);
+    public String getOrderCode() {
+        return orderCode.getValue();
     }
 
     public void addItem(@NotNull final StockItem stockItem, final int quantity) {
@@ -94,7 +95,7 @@ public class Order {
     }
 
     public double calculateShippingCost(final double shippingDistanceKm) {
-        final Shipping shipping = new Shipping(shippingDistanceKm);
+        final ShippingCalculator shipping = new ShippingCalculator(shippingDistanceKm);
         for (final OrderItem item : items) {
             for (int i = 0; i < item.quantity(); i++) {
                 shipping.addShippedItem(new ShippedItem(item.heightCm(), item.widthCm(), item.lengthCm(), item.weightKg()));

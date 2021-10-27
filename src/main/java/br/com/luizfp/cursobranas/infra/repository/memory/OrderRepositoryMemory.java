@@ -11,6 +11,11 @@ public final class OrderRepositoryMemory implements OrderRepository {
     @NotNull
     private final List<Order> orders = new ArrayList<>();
 
+    @Override
+    public long nextSequence() {
+        return 0;
+    }
+
     @NotNull
     @Override
     public Long save(@NotNull final Order order) {

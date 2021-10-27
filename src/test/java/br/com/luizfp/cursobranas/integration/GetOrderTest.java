@@ -42,7 +42,7 @@ public class GetOrderTest {
                         new PlaceOrderItemInput(2, 2),
                         new PlaceOrderItemInput(3, 1)));
         final PlaceOrderOutput placedOrder = placeOrder.execute(input, OffsetDateTime.now());
-        final GetOrderOutput output = getOrder.execute(placedOrder.orderId());
+        final GetOrderOutput output = getOrder.execute(placedOrder.orderCode());
         assertThat(output).isNotNull();
         assertThat(output.orderId()).isEqualTo(placedOrder.orderId());
     }

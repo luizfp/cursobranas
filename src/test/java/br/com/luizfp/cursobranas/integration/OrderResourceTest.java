@@ -52,7 +52,7 @@ public class OrderResourceTest {
     }
 
     @Test
-    void shouldGetOrderByIdFromApiEndpoint() {
+    void shouldGetOrderByCodeFromApiEndpoint() {
         final PlaceOrderInput input = new PlaceOrderInput(
                 "584.876.259-75",
                 List.of(new PlaceOrderItemInput(1, 5),
@@ -60,7 +60,7 @@ public class OrderResourceTest {
                         new PlaceOrderItemInput(3, 1)));
         final PlaceOrderOutput output = placeOrder.execute(input, OffsetDateTime.now());
         final ResponseEntity<GetOrderOutput> responseEntity = restTemplate.getForEntity(
-                "/v1/orders/%d".formatted(output.orderId()),
+                "/v1/orders/%s".formatted(output.orderCode()),
                 GetOrderOutput.class);
         assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
     }

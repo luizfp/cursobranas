@@ -11,7 +11,7 @@ public final class GetOrder {
     }
 
     @NotNull
-    public GetOrderOutput execute(@NotNull final Long orderId) {
-        return orderDao.getOrder(orderId);
+    public GetOrderOutput execute(@NotNull final String orderCode) {
+        return orderDao.getOrder(orderCode);
     }
 }

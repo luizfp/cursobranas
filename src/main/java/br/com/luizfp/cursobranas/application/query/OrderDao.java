@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface OrderDao {
     @NotNull
-    GetOrderOutput getOrder(@NotNull final Long orderId);
+    GetOrderOutput getOrder(@NotNull final String orderCode);
     @NotNull
     List<GetOrderOutput> getOrders();
 }

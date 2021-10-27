@@ -3,7 +3,7 @@ package br.com.luizfp.cursobranas.application.usecase;
 import br.com.luizfp.cursobranas.application.dto.SimulateShippingCostInput;
 import br.com.luizfp.cursobranas.application.dto.SimulateShippingCostOutput;
 import br.com.luizfp.cursobranas.domain.entity.ShippedItem;
-import br.com.luizfp.cursobranas.domain.entity.Shipping;
+import br.com.luizfp.cursobranas.domain.service.ShippingCalculator;
 import br.com.luizfp.cursobranas.domain.entity.StockItem;
 import br.com.luizfp.cursobranas.domain.repository.StockItemRepository;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +18,7 @@ public final class SimulateShippingCost {
 
     @NotNull
     public SimulateShippingCostOutput execute(@NotNull final SimulateShippingCostInput input) {
-        final Shipping shipping = new Shipping(1000);
+        final ShippingCalculator shipping = new ShippingCalculator(1000);
         input.items().forEach(item -> {
             final StockItem stockItem = repository.getById(item.idItem());
             final ShippedItem shippedItem = new ShippedItem(stockItem.heightCm(), stockItem.widthCm(), stockItem.lengthCm(), stockItem.weightKg());

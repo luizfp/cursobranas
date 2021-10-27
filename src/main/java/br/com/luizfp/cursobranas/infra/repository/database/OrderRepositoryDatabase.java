@@ -15,6 +15,12 @@ public final class OrderRepositoryDatabase implements OrderRepository {
         this.databaseConnection = databaseConnection;
     }
 
+    @Override
+    public long nextSequence() {
+        final DatabaseResultRow row = databaseConnection.one("select nextval('order_code_seq') as sequence");
+        return row.get("sequence");
+    }
+
     @NotNull
     @Override
     public Long save(@NotNull final Order order) {
@@ -22,13 +28,15 @@ public final class OrderRepositoryDatabase implements OrderRepository {
                 .runInTransaction(tx -> {
                     final DatabaseResultRow db = tx.saveReturning("""
                                                                           insert into orders (
+                                                                          code,
                                                                           user_cpf,
                                                                           used_coupon_id,
                                                                           created_at,
                                                                           order_total,
                                                                           shipping_cost)
-                                                                          values (?, ?, ?, ?, ?) returning id;
+                                                                          values (?, ?, ?, ?, ?, ?) returning id;
                                                                           """,
+                                                                  order.getOrderCode(),
                                                                   order.getCpf(),
                                                                   order.getCouponIdOrNull(),
                                                                   order.getCreatedAt(),

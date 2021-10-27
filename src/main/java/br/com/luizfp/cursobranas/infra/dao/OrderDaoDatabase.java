@@ -20,14 +20,13 @@ public final class OrderDaoDatabase implements OrderDao {
 
     @NotNull
     @Override
-    public GetOrderOutput getOrder(@NotNull final Long orderId) {
+    public GetOrderOutput getOrder(@NotNull final String orderCode) {
         return databaseConnection
                 .runInTransaction(tx -> {
-                    final DatabaseResultRow dbOrder = tx.one("select * from orders o where o.id = ?", orderId);
+                    final DatabaseResultRow dbOrder = tx.one("select * from orders o where o.code = ?", orderCode);
+                    final Long orderId = dbOrder.get("id");
                     final var items = createOrderItems(tx, orderId);
-                    return new GetOrderOutput(orderId,
-                                              dbOrder.get("code"),
-                                              items);
+                    return new GetOrderOutput(orderId, orderCode, items);
                 });
     }
 

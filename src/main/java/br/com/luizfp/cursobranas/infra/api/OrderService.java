@@ -22,7 +22,7 @@ public final class OrderService {
     }
 
     @NotNull
-    public GetOrderOutput getOrderById(@NotNull final Long orderId) {
-        return new GetOrder(orderDao).execute(orderId);
+    public GetOrderOutput getOrderByCode(@NotNull final String orderCode) {
+        return new GetOrder(orderDao).execute(orderCode);
     }
 }

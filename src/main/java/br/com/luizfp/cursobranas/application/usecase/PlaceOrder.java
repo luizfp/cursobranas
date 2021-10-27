@@ -32,13 +32,14 @@ public final class PlaceOrder {
         if (input.couponCode() != null) {
             validateCoupon.execute(input.couponCode(), orderCreatedAt);
         }
-        final Order order = new Order(input.cpf(), orderCreatedAt);
+        final long sequence = orderRepository.nextSequence();
+        final Order order = new Order(input.cpf(), orderCreatedAt, sequence);
         input.orderItemInput().forEach(inputItem -> {
             final StockItem stockItem = stockItemRepository.getById(inputItem.itemId());
             order.addItem(stockItem, inputItem.quantity());
         });
         final Long orderId = orderRepository.save(order);
-        final String orderCode = order.generateOrderCode(orderId);
+        final String orderCode = order.getOrderCode();
         return new PlaceOrderOutput(orderId, orderCode, order.calculateOrderTotal().doubleValue());
     }
 }

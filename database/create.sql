@@ -26,6 +26,7 @@ create table orders
 (
     id             bigserial                not null
         constraint pk_order primary key,
+    code           varchar(12)              not null unique,
     user_cpf       text                     not null,
     used_coupon_id bigint
         constraint fk_coupon references coupon (id),
@@ -33,6 +34,7 @@ create table orders
     order_total    numeric(7, 2)            not null,
     shipping_cost  numeric(7, 2)            not null
 );
+create sequence order_code_seq;
 
 create table order_item
 (

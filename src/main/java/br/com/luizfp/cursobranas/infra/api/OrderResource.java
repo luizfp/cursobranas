@@ -24,8 +24,8 @@ public final class OrderResource {
         return ResponseEntity.ok(orderService.getOrders());
     }
 
-    @GetMapping("{orderId}")
-    public ResponseEntity<GetOrderOutput> getOrderById(@PathVariable("orderId") final Long orderId) {
-        return ResponseEntity.ok(orderService.getOrderById(orderId));
+    @GetMapping("{orderCode}")
+    public ResponseEntity<GetOrderOutput> getOrderByCode(@PathVariable("orderCode") final String orderCode) {
+        return ResponseEntity.ok(orderService.getOrderByCode(orderCode));
     }
 }
