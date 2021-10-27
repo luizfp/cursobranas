@@ -32,8 +32,8 @@ public final class InternalDatabaseConnectionAdapter {
                     if (queryType.onlyOne() && lines.size() > 1) {
                         throw new IllegalStateException("More than one row returned for %s query!".formatted(queryType));
                     }
-                    if (lines.size() == 1) {
-                        return queryType == QueryType.ONE ? (T) lines.get(0) : (T) Optional.of(lines.get(0));
+                    if (lines.size() == 1 && queryType.onlyOne()) {
+                        return queryType == QueryType.MAYBE_ONE ? (T) Optional.of(lines.get(0)) : (T) lines.get(0);
                     }
                     return (T) lines;
                 } else {
