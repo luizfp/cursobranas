@@ -2,15 +2,16 @@ create database cursobranas;
 
 create table stock_item
 (
-    id          bigserial        not null
+    id                 bigserial        not null
         constraint pk_stock_item primary key,
-    category    text             not null,
-    description text             not null,
-    price       numeric(5, 2)    not null,
-    height_cm   double precision not null,
-    width_cm    double precision not null,
-    length_cm   double precision not null,
-    weight_kg   double precision not null
+    category           text             not null,
+    description        text             not null,
+    price              numeric(5, 2)    not null,
+    quantity_available integer          not null,
+    height_cm          double precision not null,
+    width_cm           double precision not null,
+    length_cm          double precision not null,
+    weight_kg          double precision not null
 );
 
 create table coupon
@@ -48,13 +49,14 @@ create table order_item
     quantity integer       not null
 );
 
-insert into stock_item (category, description, price, height_cm, width_cm, length_cm, weight_kg)
-values ('Electronics', 'Mouse', 50, 2, 3, 5, 0.3),
-       ('Electronics', 'Keyboard', 200, 2, 30, 10, 0.5),
-       ('Electronics', 'Smartphone', 800, 2, 3, 5, 0.3);
+insert into stock_item (category, description, price, quantity_available, height_cm, width_cm, length_cm, weight_kg)
+values ('Electronics', 'Mouse', 50, 10, 2, 3, 5, 0.3),
+       ('Electronics', 'Keyboard', 200, 10, 2, 30, 10, 0.5),
+       ('Electronics', 'Smartphone', 800, 10, 2, 3, 5, 0.3);
 
 -- Drops.
 -- drop table order_item;
 -- drop table stock_item;
 -- drop table orders;
 -- drop table coupon;
+-- drop sequence order_code_seq;
