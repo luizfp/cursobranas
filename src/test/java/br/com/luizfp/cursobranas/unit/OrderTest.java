@@ -68,4 +68,10 @@ public final class OrderTest {
         order.addItem(new StockItem(1L, "Electronics", "Computer", new BigDecimal("1500"), 10, 2, 30, 25, 1.5), 1);
         assertThat(order.calculateShippingCost(1000)).isEqualTo(21);
     }
+
+    @Test
+    void shouldCreateOrderWithPendingStatus() {
+        final Order order = new Order(CPF, OffsetDateTime.now(), 1);
+        assertThat(order.getStatus()).isEqualTo(Status.PENDING);
+    }
 }

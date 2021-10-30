@@ -18,6 +18,8 @@ public final class Order {
     private final List<OrderItem> items;
     @NotNull
     private final OrderCode orderCode;
+    @NotNull
+    private Status status;
     @Nullable
     private Coupon coupon;
 
@@ -28,6 +30,7 @@ public final class Order {
         this.createdAt = orderCreatedAt;
         this.items = new ArrayList<>();
         this.orderCode = new OrderCode(orderCreatedAt, sequence);
+        this.status = Status.PENDING;
     }
 
     @NotNull
@@ -53,6 +56,11 @@ public final class Order {
     @NotNull
     public String getOrderCode() {
         return orderCode.getValue();
+    }
+
+    @NotNull
+    public Status getStatus() {
+        return status;
     }
 
     public void addItem(@NotNull final StockItem stockItem, final int quantity) {

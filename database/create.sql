@@ -30,6 +30,8 @@ create table orders
     id             bigserial                not null
         constraint pk_order primary key,
     code           varchar(12)              not null unique,
+    status         text                     not null default 'PENDING'
+        check ( status in ('PENDING', 'SHIPPED', 'DELIVERED', 'CANCELLED') ),
     user_cpf       text                     not null,
     used_coupon_id bigint
         constraint fk_coupon references coupon (id),
