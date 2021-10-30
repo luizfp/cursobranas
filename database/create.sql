@@ -20,8 +20,10 @@ create table coupon
         constraint pk_coupon primary key,
     code                text             not null,
     expires_at          timestamp with time zone,
-    percentage_discount double precision not null
+    percentage_discount double precision not null,
+    active              boolean          not null
 );
+create unique index idx_coupon_active on coupon (code) where active is true;
 
 create table orders
 (

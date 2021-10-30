@@ -38,7 +38,7 @@ public final class PlaceOrder {
         });
         if (input.couponCode() != null) {
             final Coupon coupon = couponRepository.getByCode(input.couponCode());
-            order.applyCoupon(coupon, orderCreatedAt);
+            order.applyCoupon(coupon);
         }
         final Long orderId = orderRepository.save(order);
         final String orderCode = order.getOrderCode();

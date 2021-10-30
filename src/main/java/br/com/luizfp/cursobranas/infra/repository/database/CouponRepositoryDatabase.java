@@ -21,7 +21,7 @@ public final class CouponRepositoryDatabase implements CouponRepository {
     @Override
     public Coupon getByCode(@NotNull final String couponCode) {
         final Optional<DatabaseResultRow> optional =
-                databaseConnection.maybeOne("select * from coupon c where c.code = ?", couponCode);
+                databaseConnection.maybeOne("select * from coupon c where c.code = ? and active", couponCode);
         if (optional.isPresent()) {
             final DatabaseResultRow db = optional.get();
             return new Coupon(db.get("id"),

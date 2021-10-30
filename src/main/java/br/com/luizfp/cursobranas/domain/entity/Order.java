@@ -9,7 +9,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Order {
+public final class Order {
     @NotNull
     private final Cpf cpf;
     @NotNull
@@ -86,9 +86,8 @@ public class Order {
         return orderTotal;
     }
 
-    public void applyCoupon(@NotNull final Coupon coupon,
-                            @NotNull final OffsetDateTime now) {
-        if (coupon.isExpired(now)) {
+    public void applyCoupon(@NotNull final Coupon coupon) {
+        if (coupon.isExpired(createdAt)) {
             throw new ExpiredCouponException(coupon.code());
         }
         this.coupon = coupon;

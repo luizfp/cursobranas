@@ -43,23 +43,22 @@ public final class OrderTest {
 
     @Test
     void shouldCreatOrderWithTenPercentCoupon() {
-        final Order order = new Order(CPF, OffsetDateTime.now(), 1);
+        final OffsetDateTime now = OffsetDateTime.now();
+        final Order order = new Order(CPF, now, 1);
         order.addItem(new StockItem(1L, "Electronics", "Mouse", new BigDecimal("50.0"), 10, 2, 3, 5, 0.3), 5);
         order.addItem(new StockItem(2L, "Electronics", "Keyboard", new BigDecimal("200.0"), 10, 2, 30, 10, 0.5), 2);
         order.addItem(new StockItem(3L, "Electronics", "Smartphone", new BigDecimal("800.0"), 10, 2, 3, 5, 0.3), 1);
-        final Coupon coupon = new Coupon(1L, "10OFF", OffsetDateTime.parse("2021-10-01T10:00:00+00:00"), 0.10);
-        final OffsetDateTime now = OffsetDateTime.parse("2021-09-01T10:00:00+00:00");
-        order.applyCoupon(coupon, now);
+        final Coupon coupon = new Coupon(1L, "10OFF", now.plusDays(1), 0.10);
+        order.applyCoupon(coupon);
         assertThat(order.calculateOrderTotal()).isEqualTo(new BigDecimal("1305.00"));
     }
 
     @Test
     void shouldThrowsWithExpiredCoupon() {
-        final Order order = new Order(CPF, OffsetDateTime.now(), 1);
+        final Order order = new Order(CPF, OffsetDateTime.parse("2021-10-01T10:00:00+00:00"), 1);
         order.addItem(new StockItem(1L, "Electronics", "Mouse", new BigDecimal("50.0"), 10, 2, 3, 5, 0.3), 5);
         final Coupon coupon = new Coupon(1L, "10OFF", OffsetDateTime.parse("2021-08-01T10:00:00+00:00"), 0.10);
-        final OffsetDateTime now = OffsetDateTime.parse("2021-09-01T10:00:00+00:00");
-        Assertions.assertThrows(ExpiredCouponException.class, () -> order.applyCoupon(coupon, now));
+        Assertions.assertThrows(ExpiredCouponException.class, () -> order.applyCoupon(coupon));
     }
 
     @Test

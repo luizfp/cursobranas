@@ -6,8 +6,11 @@ import br.com.luizfp.cursobranas.application.dto.PlaceOrderOutput;
 import br.com.luizfp.cursobranas.application.usecase.PlaceOrder;
 import br.com.luizfp.cursobranas.domain.entity.CouponNotFoundException;
 import br.com.luizfp.cursobranas.domain.factory.AbstractRepositoryFactory;
+import br.com.luizfp.cursobranas.infra.database.DatabaseConnection;
 import br.com.luizfp.cursobranas.infra.database.DatabaseConnectionAdapter;
 import br.com.luizfp.cursobranas.infra.factory.DatabaseRepositoryFactory;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,10 +25,25 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(MockitoExtension.class)
 public class PlaceOrderTest {
     private AbstractRepositoryFactory repositoryFactory;
+    private static final DatabaseConnection databaseConnection = new DatabaseConnectionAdapter();
+
+    @BeforeAll
+    static void beforeAll() {
+        databaseConnection.none("""
+                                        insert into coupon (code, expires_at, percentage_discount, active)
+                                        values ('10OFF', '2021-10-10T10:00:00', 0.1, true)
+                                        """);
+    }
+
+    @AfterAll
+    static void afterAll() {
+        databaseConnection.none("""
+                                        update coupon set active = false where code = '10OFF' and active = true
+                                        """);
+    }
 
     @BeforeEach
     void beforeEach() {
-        final var databaseConnection = new DatabaseConnectionAdapter();
         repositoryFactory = new DatabaseRepositoryFactory(databaseConnection);
     }
 
@@ -41,6 +59,21 @@ public class PlaceOrderTest {
         final PlaceOrderOutput output = placeOrder.execute(input, orderCreatedAt);
         assertThat(output.orderId()).isGreaterThan(0);
         assertThat(output.orderTotal()).isEqualTo(1450);
+    }
+
+    @Test
+    void shouldPlaceAnOrderWith10OffCoupon() {
+        final PlaceOrderInput input = new PlaceOrderInput(
+                "584.876.259-75",
+                List.of(new PlaceOrderItemInput(1, 5),
+                        new PlaceOrderItemInput(2, 2),
+                        new PlaceOrderItemInput(3, 1)),
+                "10OFF");
+        final PlaceOrder placeOrder = new PlaceOrder(repositoryFactory);
+        final OffsetDateTime orderCreatedAt = OffsetDateTime.parse("2021-01-01T10:00:00+00:00");
+        final PlaceOrderOutput output = placeOrder.execute(input, orderCreatedAt);
+        assertThat(output.orderId()).isGreaterThan(0);
+        assertThat(output.orderTotal()).isEqualTo(1305);
     }
 
     @Test
