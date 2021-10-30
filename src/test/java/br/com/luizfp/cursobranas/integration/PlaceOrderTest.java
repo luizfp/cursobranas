@@ -12,8 +12,6 @@ import br.com.luizfp.cursobranas.infra.database.DatabaseConnectionAdapter;
 import br.com.luizfp.cursobranas.infra.database.DatabaseResultRow;
 import br.com.luizfp.cursobranas.infra.factory.DatabaseRepositoryFactory;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -21,7 +19,6 @@ import java.util.List;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@ExtendWith(MockitoExtension.class)
 public class PlaceOrderTest {
     private AbstractRepositoryFactory repositoryFactory;
     private static final DatabaseConnection databaseConnection = new DatabaseConnectionAdapter();
