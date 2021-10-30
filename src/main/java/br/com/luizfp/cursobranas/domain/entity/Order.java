@@ -110,4 +110,11 @@ public final class Order {
         }
         return shipping.calculateCost();
     }
+
+    public void cancel() {
+        if (this.status == Status.CANCELLED) {
+            throw new OrderAlreadyCancelledException();
+        }
+        this.status = Status.CANCELLED;
+    }
 }

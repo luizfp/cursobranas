@@ -74,4 +74,20 @@ public final class OrderTest {
         final Order order = new Order(CPF, OffsetDateTime.now(), 1);
         assertThat(order.getStatus()).isEqualTo(Status.PENDING);
     }
+
+    @Test
+    void shouldCancelAnOrder() {
+        final Order order = new Order(CPF, OffsetDateTime.now(), 1);
+        assertThat(order.getStatus()).isEqualTo(Status.PENDING);
+        order.cancel();
+        assertThat(order.getStatus()).isEqualTo(Status.CANCELLED);
+    }
+
+    @Test
+    void shouldNotCancelAnAlreadyCancelledOrder() {
+        final Order order = new Order(CPF, OffsetDateTime.now(), 1);
+        assertThat(order.getStatus()).isEqualTo(Status.PENDING);
+        order.cancel();
+        Assertions.assertThrows(OrderAlreadyCancelledException.class, order::cancel);
+    }
 }
