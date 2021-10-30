@@ -11,7 +11,7 @@ public final class InsufficientStockItemsException extends RuntimeException {
     public InsufficientStockItemsException(@NotNull final Long itemId,
                                            final int availableQuantity,
                                            final int desiredQuantity) {
-        super("Error to buy item %d.\nAvailable items: %d\nDesired items: %d."
+        super("Error to buy item %d.\nAvailable quantity: %d\nDesired quantity: %d."
                       .formatted(itemId, availableQuantity, desiredQuantity));
         this.itemId = itemId;
         this.availableQuantity = availableQuantity;

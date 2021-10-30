@@ -9,6 +9,7 @@ import br.com.luizfp.cursobranas.domain.entity.InsufficientStockItemsException;
 import br.com.luizfp.cursobranas.domain.factory.AbstractRepositoryFactory;
 import br.com.luizfp.cursobranas.infra.database.DatabaseConnection;
 import br.com.luizfp.cursobranas.infra.database.DatabaseConnectionAdapter;
+import br.com.luizfp.cursobranas.infra.database.DatabaseResultRow;
 import br.com.luizfp.cursobranas.infra.factory.DatabaseRepositoryFactory;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -98,5 +99,22 @@ public class PlaceOrderTest {
         final var placeOrder = new PlaceOrder(repositoryFactory);
         final var orderCreatedAt = OffsetDateTime.parse("2021-01-01T10:00:00+00:00");
         assertThrows(InsufficientStockItemsException.class, () -> placeOrder.execute(input, orderCreatedAt));
+    }
+
+    @Test
+    void shouldDebitStockAfterPlaceOrder() {
+        final var input = new PlaceOrderInput(
+                "584.876.259-75",
+                List.of(new PlaceOrderItemInput(1, 10)));
+        final var placeOrder = new PlaceOrder(repositoryFactory);
+        final var orderCreatedAt = OffsetDateTime.parse("2021-01-01T10:00:00+00:00");
+        placeOrder.execute(input, orderCreatedAt);
+        assertThat(getQuantityAvailableForStockItem(1)).isEqualTo(0);
+    }
+
+    private int getQuantityAvailableForStockItem(final long itemId) {
+        final DatabaseResultRow row = new DatabaseConnectionAdapter()
+                .one("select si.quantity_available from stock_item si where si.id = ?", itemId);
+        return row.get("quantity_available");
     }
 }
