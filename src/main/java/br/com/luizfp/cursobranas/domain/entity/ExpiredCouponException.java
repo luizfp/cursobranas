@@ -2,7 +2,7 @@ package br.com.luizfp.cursobranas.domain.entity;
 
 import org.jetbrains.annotations.NotNull;
 
-public class ExpiredCouponException extends RuntimeException {
+public final class ExpiredCouponException extends RuntimeException {
     @NotNull
     private final String couponCode;
 

@@ -2,7 +2,7 @@ package br.com.luizfp.cursobranas.domain.entity;
 
 import org.jetbrains.annotations.NotNull;
 
-public class CouponNotFoundException extends RuntimeException {
+public final class CouponNotFoundException extends RuntimeException {
     @NotNull
     private final String couponCode;
 

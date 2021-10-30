@@ -2,7 +2,7 @@ package br.com.luizfp.cursobranas.domain.entity;
 
 import org.jetbrains.annotations.NotNull;
 
-public class StockItemNotFoundException extends RuntimeException {
+public final class StockItemNotFoundException extends RuntimeException {
     @NotNull
     private final Long itemId;
 

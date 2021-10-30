@@ -1,4 +1,4 @@
 package br.com.luizfp.cursobranas.domain.entity;
 
-public class InvalidCpfException extends RuntimeException {
+public final class InvalidCpfException extends RuntimeException {
 }
