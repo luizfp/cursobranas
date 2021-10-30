@@ -11,10 +11,7 @@ import br.com.luizfp.cursobranas.infra.database.DatabaseConnection;
 import br.com.luizfp.cursobranas.infra.database.DatabaseConnectionAdapter;
 import br.com.luizfp.cursobranas.infra.database.DatabaseResultRow;
 import br.com.luizfp.cursobranas.infra.factory.DatabaseRepositoryFactory;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -47,6 +44,11 @@ public class PlaceOrderTest {
     @BeforeEach
     void beforeEach() {
         repositoryFactory = new DatabaseRepositoryFactory(databaseConnection);
+    }
+
+    @AfterEach
+    void afterEach() {
+        databaseConnection.none("update stock_item set quantity_available = 10");
     }
 
     @Test
@@ -113,7 +115,7 @@ public class PlaceOrderTest {
     }
 
     private int getQuantityAvailableForStockItem(final long itemId) {
-        final DatabaseResultRow row = new DatabaseConnectionAdapter()
+        final DatabaseResultRow row = databaseConnection
                 .one("select si.quantity_available from stock_item si where si.id = ?", itemId);
         return row.get("quantity_available");
     }
