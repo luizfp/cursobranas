@@ -3,6 +3,7 @@ package br.com.luizfp.cursobranas.application.usecase;
 import br.com.luizfp.cursobranas.application.dto.SimulateShippingCostInput;
 import br.com.luizfp.cursobranas.application.dto.SimulateShippingCostOutput;
 import br.com.luizfp.cursobranas.domain.entity.ShippedItem;
+import br.com.luizfp.cursobranas.domain.factory.AbstractRepositoryFactory;
 import br.com.luizfp.cursobranas.domain.service.ShippingCalculator;
 import br.com.luizfp.cursobranas.domain.entity.StockItem;
 import br.com.luizfp.cursobranas.domain.repository.StockItemRepository;
@@ -12,8 +13,8 @@ public final class SimulateShippingCost {
     @NotNull
     private final StockItemRepository repository;
 
-    public SimulateShippingCost(@NotNull final StockItemRepository repository) {
-        this.repository = repository;
+    public SimulateShippingCost(@NotNull final AbstractRepositoryFactory factory) {
+        this.repository = factory.createStockItemRepository();
     }
 
     @NotNull

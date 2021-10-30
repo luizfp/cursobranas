@@ -5,12 +5,9 @@ import br.com.luizfp.cursobranas.application.dto.PlaceOrderItemInput;
 import br.com.luizfp.cursobranas.application.query.GetOrderOutput;
 import br.com.luizfp.cursobranas.application.query.GetOrdersList;
 import br.com.luizfp.cursobranas.application.usecase.PlaceOrder;
-import br.com.luizfp.cursobranas.application.usecase.ValidateCoupon;
 import br.com.luizfp.cursobranas.infra.dao.OrderDaoDatabase;
 import br.com.luizfp.cursobranas.infra.database.DatabaseConnectionAdapter;
-import br.com.luizfp.cursobranas.infra.repository.database.CouponRepositoryDatabase;
-import br.com.luizfp.cursobranas.infra.repository.database.OrderRepositoryDatabase;
-import br.com.luizfp.cursobranas.infra.repository.database.StockItemRepositoryDatabase;
+import br.com.luizfp.cursobranas.infra.factory.DatabaseRepositoryFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -26,9 +23,8 @@ public class GetOrdersListTest {
     @BeforeAll
     static void beforeAll() {
         final var databaseConnection = new DatabaseConnectionAdapter();
-        placeOrder = new PlaceOrder(new ValidateCoupon(new CouponRepositoryDatabase(databaseConnection)),
-                                    new OrderRepositoryDatabase(databaseConnection),
-                                    new StockItemRepositoryDatabase(databaseConnection));
+        final var repositoryFactory = new DatabaseRepositoryFactory(databaseConnection);
+        placeOrder = new PlaceOrder(repositoryFactory);
         final var orderDao = new OrderDaoDatabase(databaseConnection);
         getOrders = new GetOrdersList(orderDao);
     }

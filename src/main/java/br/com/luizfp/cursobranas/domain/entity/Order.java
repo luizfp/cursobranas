@@ -89,7 +89,7 @@ public class Order {
     public void applyCoupon(@NotNull final Coupon coupon,
                             @NotNull final OffsetDateTime now) {
         if (coupon.isExpired(now)) {
-            throw new ExpiredCouponException();
+            throw new ExpiredCouponException(coupon.code());
         }
         this.coupon = coupon;
     }
