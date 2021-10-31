@@ -3,7 +3,6 @@ package br.com.luizfp.cursobranas.application.usecase;
 import br.com.luizfp.cursobranas.application.dto.PlaceOrderInput;
 import br.com.luizfp.cursobranas.application.dto.PlaceOrderOutput;
 import br.com.luizfp.cursobranas.domain.entity.Coupon;
-import br.com.luizfp.cursobranas.domain.entity.InsufficientStockItemsException;
 import br.com.luizfp.cursobranas.domain.entity.Order;
 import br.com.luizfp.cursobranas.domain.entity.StockItem;
 import br.com.luizfp.cursobranas.domain.factory.AbstractRepositoryFactory;
@@ -35,11 +34,11 @@ public final class PlaceOrder {
         final Order order = new Order(input.cpf(), orderCreatedAt, sequence);
         input.orderItemInput().forEach(inputItem -> {
             final StockItem stockItem = stockItemRepository.getById(inputItem.itemId());
-            if (inputItem.quantity() > stockItem.quantityAvailable()) {
-                throw new InsufficientStockItemsException(inputItem.itemId(),
-                                                          stockItem.quantityAvailable(),
-                                                          inputItem.quantity());
-            }
+//            if (inputItem.quantity() > stockItem.quantityAvailable()) {
+//                throw new InsufficientStockItemsException(inputItem.itemId(),
+//                                                          stockItem.quantityAvailable(),
+//                                                          inputItem.quantity());
+//            }
             order.addItem(stockItem, inputItem.quantity());
         });
         if (input.couponCode() != null) {

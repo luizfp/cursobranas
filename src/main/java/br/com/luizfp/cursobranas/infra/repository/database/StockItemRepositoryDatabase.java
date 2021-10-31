@@ -23,7 +23,6 @@ public final class StockItemRepositoryDatabase implements StockItemRepository {
                 row.get("category"),
                 row.get("description"),
                 row.get("price"),
-                row.get("quantity_available"),
                 row.get("height_cm"),
                 row.get("width_cm"),
                 row.get("length_cm"),

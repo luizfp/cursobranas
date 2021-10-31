@@ -14,9 +14,9 @@ public final class StockItemRepositoryMemory implements StockItemRepository {
     private final List<StockItem> items = new ArrayList<>();
 
     public StockItemRepositoryMemory() {
-        items.add(new StockItem(1L, "Electronics", "Mouse", new BigDecimal("50.0"), 10,2, 3, 5, 0.3));
-        items.add(new StockItem(2L, "Electronics", "Keyboard", new BigDecimal("200.0"), 10, 2, 30, 10, 0.5));
-        items.add(new StockItem(3L, "Electronics", "Smartphone", new BigDecimal("800.0"), 10,2, 3, 5, 0.3));
+        items.add(new StockItem(1L, "Electronics", "Mouse", new BigDecimal("50.0"),2, 3, 5, 0.3));
+        items.add(new StockItem(2L, "Electronics", "Keyboard", new BigDecimal("200.0"), 2, 30, 10, 0.5));
+        items.add(new StockItem(3L, "Electronics", "Smartphone", new BigDecimal("800.0"),2, 3, 5, 0.3));
     }
 
     @NotNull

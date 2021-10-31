@@ -26,18 +26,18 @@ public final class OrderTest {
     @Test
     void shouldCreatOrderWithRightTotalItems() {
         final Order order = new Order(CPF, OffsetDateTime.now(), 1);
-        order.addItem(new StockItem(1L, "Electronics", "Mouse", new BigDecimal("50.0"), 10, 2,  3, 5, 0.3), 5);
-        order.addItem(new StockItem(2L, "Electronics", "Keyboard", new BigDecimal("200.0"), 10, 2, 30, 10, 0.5), 2);
-        order.addItem(new StockItem(3L, "Electronics", "Smartphone", new BigDecimal("800.0"), 10, 2, 3, 5, 0.3), 1);
+        order.addItem(new StockItem(1L, "Electronics", "Mouse", new BigDecimal("50.0"), 2,  3, 5, 0.3), 5);
+        order.addItem(new StockItem(2L, "Electronics", "Keyboard", new BigDecimal("200.0"), 2, 30, 10, 0.5), 2);
+        order.addItem(new StockItem(3L, "Electronics", "Smartphone", new BigDecimal("800.0"), 2, 3, 5, 0.3), 1);
         assertThat(order.getTotalItems()).isEqualTo(8);
     }
 
     @Test
     void shouldCreatOrderWithRightAmountExpended() {
         final Order order = new Order(CPF, OffsetDateTime.now(), 1);
-        order.addItem(new StockItem(1L, "Electronics", "Mouse", new BigDecimal("50.0"), 10, 2, 3, 5, 0.3), 5);
-        order.addItem(new StockItem(2L, "Electronics", "Keyboard", new BigDecimal("200.0"), 10, 2, 30, 10, 0.5), 2);
-        order.addItem(new StockItem(3L, "Electronics", "Smartphone", new BigDecimal("800.0"), 10, 2, 3, 5, 0.3), 1);
+        order.addItem(new StockItem(1L, "Electronics", "Mouse", new BigDecimal("50.0"), 2, 3, 5, 0.3), 5);
+        order.addItem(new StockItem(2L, "Electronics", "Keyboard", new BigDecimal("200.0"), 2, 30, 10, 0.5), 2);
+        order.addItem(new StockItem(3L, "Electronics", "Smartphone", new BigDecimal("800.0"), 2, 3, 5, 0.3), 1);
         assertThat(order.calculateOrderTotal()).isEqualTo(BigDecimal.valueOf(1450.0));
     }
 
@@ -45,9 +45,9 @@ public final class OrderTest {
     void shouldCreatOrderWithTenPercentCoupon() {
         final OffsetDateTime now = OffsetDateTime.now();
         final Order order = new Order(CPF, now, 1);
-        order.addItem(new StockItem(1L, "Electronics", "Mouse", new BigDecimal("50.0"), 10, 2, 3, 5, 0.3), 5);
-        order.addItem(new StockItem(2L, "Electronics", "Keyboard", new BigDecimal("200.0"), 10, 2, 30, 10, 0.5), 2);
-        order.addItem(new StockItem(3L, "Electronics", "Smartphone", new BigDecimal("800.0"), 10, 2, 3, 5, 0.3), 1);
+        order.addItem(new StockItem(1L, "Electronics", "Mouse", new BigDecimal("50.0"), 2, 3, 5, 0.3), 5);
+        order.addItem(new StockItem(2L, "Electronics", "Keyboard", new BigDecimal("200.0"), 2, 30, 10, 0.5), 2);
+        order.addItem(new StockItem(3L, "Electronics", "Smartphone", new BigDecimal("800.0"), 2, 3, 5, 0.3), 1);
         final Coupon coupon = new Coupon(1L, "10OFF", now.plusDays(1), 0.10);
         order.applyCoupon(coupon);
         assertThat(order.calculateOrderTotal()).isEqualTo(new BigDecimal("1305.00"));
@@ -56,7 +56,7 @@ public final class OrderTest {
     @Test
     void shouldThrowsWithExpiredCoupon() {
         final Order order = new Order(CPF, OffsetDateTime.parse("2021-10-01T10:00:00+00:00"), 1);
-        order.addItem(new StockItem(1L, "Electronics", "Mouse", new BigDecimal("50.0"), 10, 2, 3, 5, 0.3), 5);
+        order.addItem(new StockItem(1L, "Electronics", "Mouse", new BigDecimal("50.0"), 2, 3, 5, 0.3), 5);
         final Coupon coupon = new Coupon(1L, "10OFF", OffsetDateTime.parse("2021-08-01T10:00:00+00:00"), 0.10);
         Assertions.assertThrows(ExpiredCouponException.class, () -> order.applyCoupon(coupon));
     }
@@ -64,8 +64,8 @@ public final class OrderTest {
     @Test
     void shouldCalculateRightShippingCost() {
         final Order order = new Order(CPF, OffsetDateTime.now(), 1);
-        order.addItem(new StockItem(1L, "Electronics", "Mouse", new BigDecimal("50.0"), 10, 2, 3, 5, 0.3), 2);
-        order.addItem(new StockItem(1L, "Electronics", "Computer", new BigDecimal("1500"), 10, 2, 30, 25, 1.5), 1);
+        order.addItem(new StockItem(1L, "Electronics", "Mouse", new BigDecimal("50.0"), 2, 3, 5, 0.3), 2);
+        order.addItem(new StockItem(1L, "Electronics", "Computer", new BigDecimal("1500"), 2, 30, 25, 1.5), 1);
         assertThat(order.calculateShippingCost(1000)).isEqualTo(21);
     }
 
