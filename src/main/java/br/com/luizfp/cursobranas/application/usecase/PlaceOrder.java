@@ -42,9 +42,9 @@ public final class PlaceOrder {
             final Collection<StockEntry> entries = stockEntryRepository.getByItemId(inputItem.itemId());
             final int quantityAvailable = countAvailableStockQuantity(entries);
             if (inputItem.quantity() > quantityAvailable) {
-                throw new InsufficientStockItemsException(inputItem.itemId(),
-                                                          quantityAvailable,
-                                                          inputItem.quantity());
+                throw new OutOfStockException(inputItem.itemId(),
+                                              quantityAvailable,
+                                              inputItem.quantity());
             }
             order.addItem(stockItem, inputItem.quantity());
         });

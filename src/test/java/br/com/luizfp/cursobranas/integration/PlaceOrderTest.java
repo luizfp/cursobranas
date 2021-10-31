@@ -5,7 +5,7 @@ import br.com.luizfp.cursobranas.application.dto.PlaceOrderItemInput;
 import br.com.luizfp.cursobranas.application.dto.PlaceOrderOutput;
 import br.com.luizfp.cursobranas.application.usecase.PlaceOrder;
 import br.com.luizfp.cursobranas.domain.entity.CouponNotFoundException;
-import br.com.luizfp.cursobranas.domain.entity.InsufficientStockItemsException;
+import br.com.luizfp.cursobranas.domain.entity.OutOfStockException;
 import br.com.luizfp.cursobranas.domain.factory.AbstractRepositoryFactory;
 import br.com.luizfp.cursobranas.infra.database.DatabaseConnection;
 import br.com.luizfp.cursobranas.infra.database.DatabaseConnectionAdapter;
@@ -97,7 +97,7 @@ public class PlaceOrderTest {
                 List.of(new PlaceOrderItemInput(1, 20)));
         final var placeOrder = new PlaceOrder(repositoryFactory);
         final var orderCreatedAt = OffsetDateTime.parse("2021-01-01T10:00:00+00:00");
-        assertThrows(InsufficientStockItemsException.class, () -> placeOrder.execute(input, orderCreatedAt));
+        assertThrows(OutOfStockException.class, () -> placeOrder.execute(input, orderCreatedAt));
     }
 
     @Test
