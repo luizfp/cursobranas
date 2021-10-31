@@ -10,4 +10,6 @@ public interface StockEntryRepository {
 
     @NotNull
     Collection<StockEntry> getByItemId(@NotNull final Long itemId);
+
+    void clean();
 }

@@ -55,9 +55,9 @@ public final class OrderRepositoryDatabase implements OrderRepository {
                                 item.id(),
                                 item.price(),
                                 item.quantity());
-                        tx.none("update stock_item set quantity_available = quantity_available - ? where id = ?",
-                                item.quantity(),
-                                item.id());
+                        tx.none("insert into stock_entry (item_id, operation, quantity) values (?, 'OUT', ?)",
+                                item.id(),
+                                item.quantity());
                     }
                     return orderId;
                 });

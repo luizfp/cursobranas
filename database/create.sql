@@ -1,4 +1,4 @@
-create database cursobranas;
+-- create database cursobranas;
 
 create table stock_item
 (
@@ -76,6 +76,7 @@ values (1, 'IN', 10),
 -- Drops.
 -- drop table order_item;
 -- drop table stock_item;
+-- drop table stock_entry;
 -- drop table orders;
 -- drop table coupon;
 -- drop sequence order_code_seq;

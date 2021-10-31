@@ -39,4 +39,9 @@ public final class StockEntryRepositoryDatabase implements StockEntryRepository 
                                           db.get("quantity")))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
+
+    @Override
+    public void clean() {
+        databaseConnection.none("delete from stock_entry where operation = 'OUT'");
+    }
 }

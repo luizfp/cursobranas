@@ -2,16 +2,18 @@ package br.com.luizfp.cursobranas.application.usecase;
 
 import br.com.luizfp.cursobranas.application.dto.PlaceOrderInput;
 import br.com.luizfp.cursobranas.application.dto.PlaceOrderOutput;
-import br.com.luizfp.cursobranas.domain.entity.Coupon;
-import br.com.luizfp.cursobranas.domain.entity.Order;
-import br.com.luizfp.cursobranas.domain.entity.StockItem;
+import br.com.luizfp.cursobranas.domain.entity.*;
 import br.com.luizfp.cursobranas.domain.factory.AbstractRepositoryFactory;
 import br.com.luizfp.cursobranas.domain.repository.CouponRepository;
 import br.com.luizfp.cursobranas.domain.repository.OrderRepository;
+import br.com.luizfp.cursobranas.domain.repository.StockEntryRepository;
 import br.com.luizfp.cursobranas.domain.repository.StockItemRepository;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.OffsetDateTime;
+import java.util.Collection;
+
+import static br.com.luizfp.cursobranas.domain.entity.StockEntryOperation.IN;
 
 public final class PlaceOrder {
     @NotNull
@@ -20,11 +22,14 @@ public final class PlaceOrder {
     private final OrderRepository orderRepository;
     @NotNull
     private final StockItemRepository stockItemRepository;
+    @NotNull
+    private final StockEntryRepository stockEntryRepository;
 
     public PlaceOrder(@NotNull final AbstractRepositoryFactory factory) {
         this.couponRepository = factory.createCouponRepository();
         this.orderRepository = factory.createOrderRepository();
         this.stockItemRepository = factory.createStockItemRepository();
+        this.stockEntryRepository = factory.createStockEntryRepository();
     }
 
     @NotNull
@@ -34,11 +39,13 @@ public final class PlaceOrder {
         final Order order = new Order(input.cpf(), orderCreatedAt, sequence);
         input.orderItemInput().forEach(inputItem -> {
             final StockItem stockItem = stockItemRepository.getById(inputItem.itemId());
-//            if (inputItem.quantity() > stockItem.quantityAvailable()) {
-//                throw new InsufficientStockItemsException(inputItem.itemId(),
-//                                                          stockItem.quantityAvailable(),
-//                                                          inputItem.quantity());
-//            }
+            final Collection<StockEntry> entries = stockEntryRepository.getByItemId(inputItem.itemId());
+            final int quantityAvailable = countAvailableStockQuantity(entries);
+            if (inputItem.quantity() > quantityAvailable) {
+                throw new InsufficientStockItemsException(inputItem.itemId(),
+                                                          quantityAvailable,
+                                                          inputItem.quantity());
+            }
             order.addItem(stockItem, inputItem.quantity());
         });
         if (input.couponCode() != null) {
@@ -48,5 +55,12 @@ public final class PlaceOrder {
         final Long orderId = orderRepository.save(order);
         final String orderCode = order.getOrderCode();
         return new PlaceOrderOutput(orderId, orderCode, order.calculateOrderTotal().doubleValue());
+    }
+
+    private int countAvailableStockQuantity(@NotNull final Collection<StockEntry> entries) {
+        return entries
+                .stream()
+                .mapToInt(entry -> entry.operation() == IN ? entry.quantity() : -entry.quantity())
+                .sum();
     }
 }

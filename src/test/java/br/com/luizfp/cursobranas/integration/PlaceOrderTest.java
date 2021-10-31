@@ -9,19 +9,19 @@ import br.com.luizfp.cursobranas.domain.entity.InsufficientStockItemsException;
 import br.com.luizfp.cursobranas.domain.factory.AbstractRepositoryFactory;
 import br.com.luizfp.cursobranas.infra.database.DatabaseConnection;
 import br.com.luizfp.cursobranas.infra.database.DatabaseConnectionAdapter;
-import br.com.luizfp.cursobranas.infra.database.DatabaseResultRow;
 import br.com.luizfp.cursobranas.infra.factory.DatabaseRepositoryFactory;
 import org.junit.jupiter.api.*;
 
 import java.time.OffsetDateTime;
 import java.util.List;
 
+import static br.com.luizfp.cursobranas.domain.entity.StockEntryOperation.IN;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PlaceOrderTest {
-    private AbstractRepositoryFactory repositoryFactory;
     private static final DatabaseConnection databaseConnection = new DatabaseConnectionAdapter();
+    private AbstractRepositoryFactory repositoryFactory;
 
     @BeforeAll
     static void beforeAll() {
@@ -45,7 +45,7 @@ public class PlaceOrderTest {
 
     @AfterEach
     void afterEach() {
-        databaseConnection.none("update stock_item set quantity_available = 10");
+        repositoryFactory.createStockEntryRepository().clean();
     }
 
     @Test
@@ -112,8 +112,11 @@ public class PlaceOrderTest {
     }
 
     private int getQuantityAvailableForStockItem(final long itemId) {
-        final DatabaseResultRow row = databaseConnection
-                .one("select si.quantity_available from stock_item si where si.id = ?", itemId);
-        return row.get("quantity_available");
+        return repositoryFactory
+                .createStockEntryRepository()
+                .getByItemId(itemId)
+                .stream()
+                .mapToInt(entry -> entry.operation() == IN ? entry.quantity() : -entry.quantity())
+                .sum();
     }
 }

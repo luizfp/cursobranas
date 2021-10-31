@@ -5,6 +5,7 @@ import br.com.luizfp.cursobranas.application.dto.PlaceOrderItemInput;
 import br.com.luizfp.cursobranas.application.query.GetOrderOutput;
 import br.com.luizfp.cursobranas.application.query.GetOrdersList;
 import br.com.luizfp.cursobranas.application.usecase.PlaceOrder;
+import br.com.luizfp.cursobranas.domain.factory.AbstractRepositoryFactory;
 import br.com.luizfp.cursobranas.infra.dao.OrderDaoDatabase;
 import br.com.luizfp.cursobranas.infra.database.DatabaseConnectionAdapter;
 import br.com.luizfp.cursobranas.infra.factory.DatabaseRepositoryFactory;
@@ -18,14 +19,14 @@ import java.util.List;
 import static com.google.common.truth.Truth.assertThat;
 
 public class GetOrdersListTest {
-    private static DatabaseConnectionAdapter databaseConnection;
+    private static AbstractRepositoryFactory repositoryFactory;
     private static PlaceOrder placeOrder;
     private static GetOrdersList getOrders;
 
     @BeforeAll
     static void beforeAll() {
-        databaseConnection = new DatabaseConnectionAdapter();
-        final var repositoryFactory = new DatabaseRepositoryFactory(databaseConnection);
+        final var databaseConnection = new DatabaseConnectionAdapter();
+        repositoryFactory = new DatabaseRepositoryFactory(databaseConnection);
         placeOrder = new PlaceOrder(repositoryFactory);
         final var orderDao = new OrderDaoDatabase(databaseConnection);
         getOrders = new GetOrdersList(orderDao);
@@ -33,7 +34,7 @@ public class GetOrdersListTest {
 
     @AfterEach
     void afterEach() {
-        databaseConnection.none("update stock_item set quantity_available = 10");
+        repositoryFactory.createStockEntryRepository().clean();
     }
 
     @Test
