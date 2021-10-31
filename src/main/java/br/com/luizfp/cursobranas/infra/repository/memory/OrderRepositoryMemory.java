@@ -22,4 +22,15 @@ public final class OrderRepositoryMemory implements OrderRepository {
         orders.add(order);
         return 1L;
     }
+
+    @NotNull
+    @Override
+    public Order getById(@NotNull final Long orderId) {
+        throw new IllegalStateException();
+    }
+
+    @Override
+    public void update(@NotNull final Order order) {
+        throw new IllegalStateException();
+    }
 }

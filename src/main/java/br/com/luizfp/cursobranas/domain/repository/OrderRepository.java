@@ -8,4 +8,9 @@ public interface OrderRepository {
 
     @NotNull
     Long save(@NotNull final Order order);
+
+    @NotNull
+    Order getById(@NotNull final Long orderId);
+
+    void update(@NotNull final Order order);
 }

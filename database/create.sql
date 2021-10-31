@@ -2,25 +2,25 @@
 
 create table stock_item
 (
-    id                 bigserial        not null
+    id          bigserial        not null
         constraint pk_stock_item primary key,
-    category           text             not null,
-    description        text             not null,
-    price              numeric(5, 2)    not null,
-    height_cm          double precision not null,
-    width_cm           double precision not null,
-    length_cm          double precision not null,
-    weight_kg          double precision not null
+    category    text             not null,
+    description text             not null,
+    price       numeric(5, 2)    not null,
+    height_cm   double precision not null,
+    width_cm    double precision not null,
+    length_cm   double precision not null,
+    weight_kg   double precision not null
 );
 
 create table stock_entry
 (
-    id        bigserial not null
+    id        bigserial                not null
         constraint pk_stock_entry primary key,
-    item_id   bigint    not null
+    item_id   bigint                   not null
         constraint fk_item references stock_item (id),
-    operation text      not null check (operation in ('IN', 'OUT')),
-    quantity  integer   not null,
+    operation text                     not null check (operation in ('IN', 'OUT')),
+    quantity  integer                  not null,
     date      timestamp with time zone not null default now()
 );
 
@@ -40,6 +40,7 @@ create table orders
     id             bigserial                not null
         constraint pk_order primary key,
     code           varchar(12)              not null unique,
+    sequence       integer                  not null,
     status         text                     not null default 'PENDING'
         check ( status in ('PENDING', 'CONFIRMED', 'SHIPPED', 'DELIVERED', 'CANCELLED') ),
     user_cpf       text                     not null,
@@ -75,8 +76,8 @@ values (1, 'IN', 10),
 
 -- Drops.
 -- drop table order_item;
--- drop table stock_item;
 -- drop table stock_entry;
+-- drop table stock_item;
 -- drop table orders;
 -- drop table coupon;
 -- drop sequence order_code_seq;

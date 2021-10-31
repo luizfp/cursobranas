@@ -14,6 +14,8 @@ public final class CancelOrder {
     }
 
     public void execute(@NotNull final CancelOrderInput input) {
-
+        final var order = orderRepository.getById(input.orderId());
+        order.cancel();
+        orderRepository.update(order);
     }
 }

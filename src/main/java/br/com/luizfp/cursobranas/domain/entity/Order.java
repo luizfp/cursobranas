@@ -16,21 +16,30 @@ public final class Order {
     private final OffsetDateTime createdAt;
     @NotNull
     private final List<OrderItem> items;
+    private final long sequence;
     @NotNull
     private final OrderCode orderCode;
     @NotNull
-    private Status status;
+    private OrderStatus orderStatus;
     @Nullable
     private Coupon coupon;
 
     public Order(@NotNull final String cpf,
                  @NotNull final OffsetDateTime orderCreatedAt,
                  final long sequence) {
+        this(cpf, orderCreatedAt, sequence, OrderStatus.PENDING);
+    }
+
+    public Order(@NotNull final String cpf,
+                 @NotNull final OffsetDateTime orderCreatedAt,
+                 final long sequence,
+                 @NotNull final OrderStatus orderStatus) {
         this.cpf = new Cpf(cpf);
         this.createdAt = orderCreatedAt;
         this.items = new ArrayList<>();
+        this.sequence = sequence;
         this.orderCode = new OrderCode(orderCreatedAt, sequence);
-        this.status = Status.PENDING;
+        this.orderStatus = orderStatus;
     }
 
     @NotNull
@@ -53,14 +62,18 @@ public final class Order {
         return items;
     }
 
+    public long getSequence() {
+        return sequence;
+    }
+
     @NotNull
     public String getOrderCode() {
         return orderCode.getValue();
     }
 
     @NotNull
-    public Status getStatus() {
-        return status;
+    public OrderStatus getStatus() {
+        return orderStatus;
     }
 
     public void addItem(@NotNull final StockItem stockItem, final int quantity) {
@@ -112,9 +125,13 @@ public final class Order {
     }
 
     public void cancel() {
-        if (this.status == Status.CANCELLED) {
+        if (this.orderStatus == OrderStatus.CANCELLED) {
             throw new OrderAlreadyCancelledException();
         }
-        this.status = Status.CANCELLED;
+        this.orderStatus = OrderStatus.CANCELLED;
+    }
+
+    public boolean isCancelled() {
+        return this.orderStatus == OrderStatus.CANCELLED;
     }
 }

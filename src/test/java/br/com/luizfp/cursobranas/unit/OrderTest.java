@@ -72,21 +72,21 @@ public final class OrderTest {
     @Test
     void shouldCreateOrderWithPendingStatus() {
         final Order order = new Order(CPF, OffsetDateTime.now(), 1);
-        assertThat(order.getStatus()).isEqualTo(Status.PENDING);
+        assertThat(order.getStatus()).isEqualTo(OrderStatus.PENDING);
     }
 
     @Test
     void shouldCancelAnOrder() {
         final Order order = new Order(CPF, OffsetDateTime.now(), 1);
-        assertThat(order.getStatus()).isEqualTo(Status.PENDING);
+        assertThat(order.getStatus()).isEqualTo(OrderStatus.PENDING);
         order.cancel();
-        assertThat(order.getStatus()).isEqualTo(Status.CANCELLED);
+        assertThat(order.getStatus()).isEqualTo(OrderStatus.CANCELLED);
     }
 
     @Test
     void shouldNotCancelAnAlreadyCancelledOrder() {
         final Order order = new Order(CPF, OffsetDateTime.now(), 1);
-        assertThat(order.getStatus()).isEqualTo(Status.PENDING);
+        assertThat(order.getStatus()).isEqualTo(OrderStatus.PENDING);
         order.cancel();
         Assertions.assertThrows(OrderAlreadyCancelledException.class, order::cancel);
     }

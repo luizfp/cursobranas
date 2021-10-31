@@ -42,6 +42,6 @@ public final class StockEntryRepositoryDatabase implements StockEntryRepository 
 
     @Override
     public void clean() {
-        databaseConnection.none("delete from stock_entry where operation = 'OUT'");
+        databaseConnection.none("delete from stock_entry where id > 3");
     }
 }

@@ -3,6 +3,7 @@ package br.com.luizfp.cursobranas.infra.dao;
 import br.com.luizfp.cursobranas.application.query.GetOrderItemOutput;
 import br.com.luizfp.cursobranas.application.query.GetOrderOutput;
 import br.com.luizfp.cursobranas.application.query.OrderDao;
+import br.com.luizfp.cursobranas.domain.entity.OrderStatus;
 import br.com.luizfp.cursobranas.infra.database.DatabaseConnection;
 import br.com.luizfp.cursobranas.infra.database.DatabaseResultRow;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +28,7 @@ public final class OrderDaoDatabase implements OrderDao {
                     final DatabaseResultRow dbOrder = tx.one("select * from orders o where o.code = ?", orderCode);
                     final Long orderId = dbOrder.get("id");
                     final var items = createOrderItems(tx, orderId);
-                    return new GetOrderOutput(orderId, orderCode, items);
+                    return new GetOrderOutput(orderId, orderCode, OrderStatus.valueOf(dbOrder.get("status")), items);
                 });
     }
 
@@ -43,6 +44,7 @@ public final class OrderDaoDatabase implements OrderDao {
                         final var items = createOrderItems(tx, orderId);
                         final GetOrderOutput order = new GetOrderOutput(orderId,
                                                                         dbOrder.get("code"),
+                                                                        OrderStatus.valueOf(dbOrder.get("status")),
                                                                         items);
                         orders.add(order);
                     }
