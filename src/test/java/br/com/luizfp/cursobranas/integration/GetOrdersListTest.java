@@ -8,6 +8,7 @@ import br.com.luizfp.cursobranas.application.usecase.PlaceOrder;
 import br.com.luizfp.cursobranas.infra.dao.OrderDaoDatabase;
 import br.com.luizfp.cursobranas.infra.database.DatabaseConnectionAdapter;
 import br.com.luizfp.cursobranas.infra.factory.DatabaseRepositoryFactory;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -17,16 +18,22 @@ import java.util.List;
 import static com.google.common.truth.Truth.assertThat;
 
 public class GetOrdersListTest {
+    private static DatabaseConnectionAdapter databaseConnection;
     private static PlaceOrder placeOrder;
     private static GetOrdersList getOrders;
 
     @BeforeAll
     static void beforeAll() {
-        final var databaseConnection = new DatabaseConnectionAdapter();
+        databaseConnection = new DatabaseConnectionAdapter();
         final var repositoryFactory = new DatabaseRepositoryFactory(databaseConnection);
         placeOrder = new PlaceOrder(repositoryFactory);
         final var orderDao = new OrderDaoDatabase(databaseConnection);
         getOrders = new GetOrdersList(orderDao);
+    }
+
+    @AfterEach
+    void afterEach() {
+        databaseConnection.none("update stock_item set quantity_available = 10");
     }
 
     @Test

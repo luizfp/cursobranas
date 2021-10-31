@@ -30,22 +30,22 @@ public final class Transaction implements DatabaseConnection, AutoCloseable {
 
     @NotNull
     @Override
-    public <T> T one(@NotNull final String query,
-                     @Nullable final Object... parameters) {
+    public DatabaseResultRow one(@NotNull final String query,
+                                 @Nullable final Object... parameters) {
         return internal.internalQuery(connection, query, QueryType.ONE, parameters);
     }
 
     @NotNull
     @Override
-    public <T extends Collection<?>> T many(@NotNull final String query,
-                                            @Nullable final Object... parameters) {
+    public Collection<DatabaseResultRow> many(@NotNull final String query,
+                                              @Nullable final Object... parameters) {
         return internal.internalQuery(connection, query, QueryType.MANY, parameters);
     }
 
     @NotNull
     @Override
-    public <T extends Optional<?>> T maybeOne(@NotNull final String query,
-                                              @Nullable final Object... parameters) {
+    public Optional<DatabaseResultRow> maybeOne(@NotNull final String query,
+                                                @Nullable final Object... parameters) {
         return internal.internalQuery(connection, query, QueryType.MAYBE_ONE, parameters);
     }
 

@@ -8,19 +8,20 @@ import java.util.Optional;
 
 public interface DatabaseConnection {
 
-    @NotNull <T> T runInTransaction(@NotNull final DatabaseTransactionRunner<T> runner);
+    @NotNull
+    <T> T runInTransaction(@NotNull final DatabaseTransactionRunner<T> runner);
 
     @NotNull
-    <T> T one(@NotNull final String query,
-              @Nullable final Object... parameters);
+    DatabaseResultRow one(@NotNull final String query,
+                          @Nullable final Object... parameters);
 
     @NotNull
-    <T extends Collection<?>> T many(@NotNull final String query,
-                                     @Nullable final Object... parameters);
-
-    @NotNull
-    <T extends Optional<?>> T maybeOne(@NotNull final String query,
+    Collection<DatabaseResultRow> many(@NotNull final String query,
                                        @Nullable final Object... parameters);
+
+    @NotNull
+    Optional<DatabaseResultRow> maybeOne(@NotNull final String query,
+                                         @Nullable final Object... parameters);
 
     void none(@NotNull final String query,
               @Nullable final Object... parameters);

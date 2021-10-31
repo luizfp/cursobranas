@@ -5,9 +5,9 @@ import br.com.luizfp.cursobranas.application.dto.PlaceOrderItemInput;
 import br.com.luizfp.cursobranas.application.dto.PlaceOrderOutput;
 import br.com.luizfp.cursobranas.application.query.GetOrderOutput;
 import br.com.luizfp.cursobranas.application.usecase.PlaceOrder;
-import br.com.luizfp.cursobranas.application.usecase.ValidateCoupon;
 import br.com.luizfp.cursobranas.infra.database.DatabaseConnectionAdapter;
 import br.com.luizfp.cursobranas.infra.factory.DatabaseRepositoryFactory;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,15 +27,21 @@ import static com.google.common.truth.Truth.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class OrderResourceTest {
+    private static DatabaseConnectionAdapter databaseConnection;
     @Autowired
     private TestRestTemplate restTemplate;
     private static PlaceOrder placeOrder;
 
     @BeforeAll
     static void beforeAll() {
-        final var databaseConnection = new DatabaseConnectionAdapter();
+        databaseConnection = new DatabaseConnectionAdapter();
         final var repositoryFactory = new DatabaseRepositoryFactory(databaseConnection);
         placeOrder = new PlaceOrder(repositoryFactory);
+    }
+
+    @AfterEach
+    void afterEach() {
+        databaseConnection.none("update stock_item set quantity_available = 10");
     }
 
     @Test

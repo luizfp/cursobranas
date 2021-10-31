@@ -8,6 +8,7 @@ import br.com.luizfp.cursobranas.infra.database.DatabaseResultRow;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public final class OrderDaoDatabase implements OrderDao {
@@ -35,7 +36,7 @@ public final class OrderDaoDatabase implements OrderDao {
     public List<GetOrderOutput> getOrders() {
         return databaseConnection
                 .runInTransaction(tx -> {
-                    final List<DatabaseResultRow> dbOrders = tx.many("select * from orders");
+                    final Collection<DatabaseResultRow> dbOrders = tx.many("select * from orders");
                     final List<GetOrderOutput> orders = new ArrayList<>();
                     for (final DatabaseResultRow dbOrder : dbOrders) {
                         final Long orderId = dbOrder.get("id");
@@ -52,11 +53,11 @@ public final class OrderDaoDatabase implements OrderDao {
     @NotNull
     private List<GetOrderItemOutput> createOrderItems(@NotNull final DatabaseConnection tx,
                                                       @NotNull final Long orderId) {
-        final List<DatabaseResultRow> dbItems = tx.many("""
-                                                                 select * from order_item oi
-                                                                 join stock_item si on oi.item_id = si.id
-                                                                 where oi.order_id = ?
-                                                                 """, orderId);
+        final Collection<DatabaseResultRow> dbItems = tx.many("""
+                                                                      select * from order_item oi
+                                                                      join stock_item si on oi.item_id = si.id
+                                                                      where oi.order_id = ?
+                                                                      """, orderId);
         final List<GetOrderItemOutput> items = new ArrayList<>();
         dbItems.forEach(dbItem -> items.add(new GetOrderItemOutput(dbItem.get("id"),
                                                                    dbItem.get("category"),
